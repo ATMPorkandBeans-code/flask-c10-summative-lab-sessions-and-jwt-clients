@@ -135,8 +135,7 @@ class Expense_by_Index(Resource):
             return {}, 204
         else:
             return {'error': '401 Unauthorized'}, 401
-            
-    
+               
 
 api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
