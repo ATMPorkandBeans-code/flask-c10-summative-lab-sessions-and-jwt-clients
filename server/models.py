@@ -6,9 +6,9 @@ from config import db, bcrypt
 
 class User(db.Model):
     __tablename__ = 'users'
-    # __table_args__ = (
-    #     db.CheckConstraint('length(username) >= 6'),
-    # )
+    __table_args__ = (
+        db.CheckConstraint('length(username) >= 6'),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)

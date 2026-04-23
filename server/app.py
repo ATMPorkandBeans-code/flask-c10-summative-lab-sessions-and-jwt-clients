@@ -8,12 +8,10 @@ class Signup(Resource):
     def post(self):
         request_json = request.get_json()
 
-        id = request_json.get('id')
         username = request_json.get('username')
         password = request_json.get('password')
 
         user = User(
-            id=id,
             username=username
         )
 
@@ -22,7 +20,7 @@ class Signup(Resource):
         try:
             db.session.add(user)
             db.session.commit()
-            session['user_id'] = user.id
+            # session['user_id'] = user.id
             return UserSchema().dump(user), 201
         except IntegrityError:
             return {'error': '422 Unprocessable Entity'}, 422
