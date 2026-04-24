@@ -22,8 +22,6 @@ with app.app_context():
     for i in range(20):
         #make sure users have unique usernames
         username = fake.unique.first_name()
-        # while username in usernames:
-        #     username = fake.first_name()
         #make sure users unique usernames are at least 6 characters
         while len(username) < 7:
             username = fake.unique.first_name()
@@ -32,7 +30,7 @@ with app.app_context():
         user = User(
             username=username
         )
-
+        #Password for Faker users is username + 'password' ie. Jacquelinepassword
         user.password_hash = user.username + 'password'
 
         users.append(user)

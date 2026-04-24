@@ -1,6 +1,6 @@
 EXPENSE TRACKER:
 
-Here is a Flask/React app that can track expenses for different users. The app is complete with a React frontend with signup, login and check session capabilities, as well as a backend that utilizes a Flask constructed API that uses SQLAlchemy and api as a database. The user will create an account with username and password and then have the oppurtunity to save the names and amounts of various expenses to their user accounts. All accounts are protected by user authentication and authorization only on that user's routes.
+Here is a Flask/React app that can track expenses for different users. The app is complete with a React frontend with signup, login and check session capabilities, as well as a backend that utilizes a Flask constructed API that uses SQLAlchemy and api as a database. The user will create an account with username and password and then have the oppurtunity to save the names and amounts of various expenses to their user accounts. All accounts are protected by user authentication and authorization only on that user's routes.  The app also features pagination on the view expenses route to load only 5 resources at one time. 
 
 TECH STACK:
 
@@ -21,13 +21,13 @@ In the terminal run:
 
 git clone https://github.com/ATMPorkandBeans-code/flask-c10-summative-lab-sessions-and-jwt-clients
 cd flask-c10-summative-lab-sessions-and-jwt-clients
-cd server
+
 
 python -m venv venv
 source venv/bin/activate # On Windows: venv\Scripts\activate
-
 pip install -r requirements.txt
 
+cd server
 flask db init
 flask db migrate -m "Initial migration"
 flask db upgrade
@@ -67,3 +67,7 @@ The backend consists of models.py that detail the User and Expense class tables 
 6. '/expenses/<int:id>'
 
 These routes allow the user to signup, log in, check session, logout, view their personal expense list, post a new expense, view a single expense by id, edit a single expense, and delete a single expense. The seed file uses Faker to create 20 unique users and 50 different sample expenses with amounts.
+
+NOTE:
+
+To sign into seeded users accounts, use the users Username + "password".

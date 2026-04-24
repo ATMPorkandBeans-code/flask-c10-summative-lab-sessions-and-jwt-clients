@@ -7,20 +7,16 @@ from models import User, UserSchema, Expense, ExpenseSchema
 class Signup(Resource):
     def post(self):
         request_json = request.get_json()
-
         username = request_json.get('username')
         password = request_json.get('password')
-
         user = User(
             username=username
         )
-
         user.password_hash = password
 
         try:
             db.session.add(user)
             db.session.commit()
-            # session['user_id'] = user.id
             return UserSchema().dump(user), 201
         except IntegrityError:
             return {'error': '422 Unprocessable Entity'}, 422
@@ -29,7 +25,7 @@ class CheckSession(Resource):
     def get(self):
 
         if session.get('user_id'):
-            user = User.query.filter(User.id == session['session_id']).first()
+            user = User.query.filter(User.id == session['user_id']).first()
             return UserSchema().dump(user), 200
         
         return {'error': '401 Unauthorized'}, 401
@@ -40,7 +36,7 @@ class Login(Resource):
         password = request.get_json()['password']
 
         user = User.query.filter(User.username == username).first()
-
+        #checks if user exists and authenticates password
         if user and user.authenticate(password):
             session['user_id'] = user.id
             return UserSchema().dump(user), 200
@@ -58,9 +54,17 @@ class ExpenseIndex(Resource):
     def get(self):
         user_id = session.get('user_id')
         if user_id:
-            expenses = [ExpenseSchema().dump(e)
-                         for e in Expense.query.filter_by(user_id=user_id).all()]
-            return expenses, 200
+            page = request.args.get("page", 1, type=int)
+            per_page = request.args.get("per_page", 5, type=int)
+            pagination = Expense.query.filter_by(user_id=user_id).paginate(page=page, per_page=per_page, error_out=False)
+            expenses = pagination.items
+            return {
+                "page": page,
+                "per_page": per_page,
+                "total": pagination.total,
+                "total_pages": pagination.pages,
+                "items": [ExpenseSchema().dump(e) for e in expenses]
+            }, 200
         return {'error': '401 Unauthorized'}, 401
     
     def post(self):
@@ -69,7 +73,6 @@ class ExpenseIndex(Resource):
             request_json = request.get_json()
             print(Expense)
             expense = Expense(
-                # id = request_json.get('id'),
                 title = request_json.get('title'),
                 amount = request_json.get('amount'),
                 user_id = user_id
